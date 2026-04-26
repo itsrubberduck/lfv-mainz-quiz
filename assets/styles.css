@@ -300,15 +300,21 @@ h2 {
 }
 
 .score-list strong,
-.score-list span {
+.score-list li div span {
     display: block;
 }
 
-.score-list span,
+.score-list li div span,
 .empty-state,
 .error-text {
     color: var(--muted);
     font-size: 0.92rem;
+}
+
+.score-list .rank {
+    display: grid;
+    color: var(--navy);
+    font-size: 1rem;
 }
 
 .score-list b {
