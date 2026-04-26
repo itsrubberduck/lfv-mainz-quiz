@@ -335,7 +335,7 @@ function renderAdmin(array $scores, string $message = ''): never
     $messageHtml = $message !== '' ? '<p class="admin-message">' . h($message) . '</p>' : '';
 
     echo '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">';
-    echo '<title>LFV Quiz Backend</title><link rel="stylesheet" href="assets/styles.css"></head><body>';
+    echo '<title>LFV Mainz Quiz Backend</title><link rel="icon" type="image/svg+xml" href="assets/favicon.svg"><link rel="stylesheet" href="assets/styles.css"></head><body>';
     echo '<main class="admin-shell"><h1>Highscore Backend</h1>' . $messageHtml;
     echo '<form method="post" action="index.php?action=admin&token=' . $token . '" onsubmit="return confirm(\'Alle Highscores löschen?\')">';
     echo '<input type="hidden" name="admin_action" value="clear"><button class="primary-button" type="submit">Alle löschen</button></form>';
@@ -504,7 +504,9 @@ if ($action === 'submit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>LFV Mainz Segelflug-Quiz</title>
+    <title>LFV Mainz Segelflug-Quiz | Highscore Challenge</title>
+    <meta name="description" content="Das Segelflug-Quiz des LFV Mainz mit Zeitwertung, Highscore und Top 10.">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;700;800&display=swap" rel="stylesheet">
