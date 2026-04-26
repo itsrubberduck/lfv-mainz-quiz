@@ -75,7 +75,7 @@ createApp({
             }
         },
         selectAnswer(index) {
-            this.answers[this.currentQuestion.id] = index;
+            this.answers[this.currentQuestion.id] = this.currentQuestion.answers[index].id;
         },
         async nextQuestion() {
             if (this.currentIndex < this.questions.length - 1) {

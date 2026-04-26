@@ -5,6 +5,8 @@ date_default_timezone_set('Europe/Berlin');
 
 const SCORE_FILE = __DIR__ . '/data/scores.json';
 
+define('ADMIN_TOKEN', getenv('LFV_QUIZ_ADMIN_TOKEN') ?: 'lfv-mainz-admin');
+
 $questions = [
     [
         'id' => 1,
@@ -244,7 +246,11 @@ function readScores(): array
     }
 
     $scores = json_decode($content, true);
-    return is_array($scores) ? $scores : [];
+    if (!is_array($scores)) {
+        return [];
+    }
+
+    return array_map('normalizeScore', $scores);
 }
 
 function writeScores(array $scores): void
@@ -258,6 +264,25 @@ function writeScores(array $scores): void
     file_put_contents(SCORE_FILE, $json . PHP_EOL, LOCK_EX);
 }
 
+function normalizeScore(array $score): array
+{
+    if (!isset($score['id'])) {
+        $score['id'] = scoreId($score);
+    }
+
+    return $score;
+}
+
+function scoreId(array $score): string
+{
+    return substr(hash('sha256', implode('|', [
+        (string) ($score['name'] ?? ''),
+        (string) ($score['createdAt'] ?? ''),
+        (string) ($score['timeMs'] ?? ''),
+        (string) ($score['correct'] ?? ''),
+    ])), 0, 16);
+}
+
 function publicScores(array $scores): array
 {
     usort($scores, static function (array $a, array $b): int {
@@ -267,6 +292,7 @@ function publicScores(array $scores): array
 
     return array_slice(array_map(static function (array $score): array {
         return [
+            'id' => $score['id'],
             'name' => $score['name'],
             'correct' => $score['correct'],
             'total' => $score['total'],
@@ -287,7 +313,119 @@ function questionMap(array $questions): array
     return $map;
 }
 
+function h(string $value): string
+{
+    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
+function isAdminRequest(): bool
+{
+    $token = (string) ($_GET['token'] ?? '');
+    return $token !== '' && hash_equals(ADMIN_TOKEN, $token);
+}
+
+function renderAdmin(array $scores, string $message = ''): never
+{
+    usort($scores, static function (array $a, array $b): int {
+        return [$b['score'], $b['correct'], -$b['timeMs'], $b['createdAt']]
+            <=> [$a['score'], $a['correct'], -$a['timeMs'], $a['createdAt']];
+    });
+
+    $token = h((string) ($_GET['token'] ?? ''));
+    $messageHtml = $message !== '' ? '<p class="admin-message">' . h($message) . '</p>' : '';
+
+    echo '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">';
+    echo '<title>LFV Quiz Backend</title><link rel="stylesheet" href="assets/styles.css"></head><body>';
+    echo '<main class="admin-shell"><h1>Highscore Backend</h1>' . $messageHtml;
+    echo '<form method="post" action="index.php?action=admin&token=' . $token . '" onsubmit="return confirm(\'Alle Highscores löschen?\')">';
+    echo '<input type="hidden" name="admin_action" value="clear"><button class="primary-button" type="submit">Alle löschen</button></form>';
+
+    if ($scores === []) {
+        echo '<p class="empty-state">Keine Highscores vorhanden.</p>';
+    } else {
+        echo '<table class="admin-table"><thead><tr><th>Name</th><th>Richtig</th><th>Zeit</th><th>Punkte</th><th></th></tr></thead><tbody>';
+        foreach ($scores as $score) {
+            echo '<tr>';
+            echo '<td>' . h((string) $score['name']) . '</td>';
+            echo '<td>' . (int) $score['correct'] . '/' . (int) $score['total'] . '</td>';
+            echo '<td>' . h(gmdate('i:s', (int) floor(((int) $score['timeMs']) / 1000))) . '</td>';
+            echo '<td>' . (int) $score['score'] . '</td>';
+            echo '<td><form method="post" action="index.php?action=admin&token=' . $token . '">';
+            echo '<input type="hidden" name="admin_action" value="delete">';
+            echo '<input type="hidden" name="score_id" value="' . h((string) $score['id']) . '">';
+            echo '<button class="admin-delete" type="submit">Löschen</button></form></td>';
+            echo '</tr>';
+        }
+        echo '</tbody></table>';
+    }
+
+    echo '</main></body></html>';
+    exit;
+}
+
+function answerId(int $questionId, int $answerIndex): string
+{
+    return hash('sha256', $questionId . ':' . $answerIndex . ':lfv-mainz-quiz');
+}
+
+function publicQuestion(array $question): array
+{
+    $answers = [];
+    foreach ($question['answers'] as $index => $answer) {
+        $text = preg_replace('/^[A-D]\)\s*/', '', $answer);
+        $answers[] = [
+            'id' => answerId((int) $question['id'], (int) $index),
+            'text' => is_string($text) ? $text : $answer,
+        ];
+    }
+
+    shuffle($answers);
+
+    return [
+        'id' => $question['id'],
+        'question' => $question['question'],
+        'answers' => array_values(array_map(static function (array $answer, int|string $index): array {
+            return [
+                'id' => $answer['id'],
+                'text' => chr(65 + (int) $index) . ') ' . $answer['text'],
+            ];
+        }, $answers, array_keys($answers))),
+    ];
+}
+
 $action = $_GET['action'] ?? null;
+
+if ($action === 'admin') {
+    if (!isAdminRequest()) {
+        http_response_code(404);
+        echo 'Nicht gefunden.';
+        exit;
+    }
+
+    $scores = readScores();
+    $message = '';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $adminAction = (string) ($_POST['admin_action'] ?? '');
+        if ($adminAction === 'clear') {
+            $scores = [];
+            writeScores($scores);
+            $message = 'Alle Highscores wurden gelöscht.';
+        }
+
+        if ($adminAction === 'delete') {
+            $scoreId = (string) ($_POST['score_id'] ?? '');
+            $before = count($scores);
+            $scores = array_values(array_filter($scores, static function (array $score) use ($scoreId): bool {
+                return !hash_equals((string) $score['id'], $scoreId);
+            }));
+            writeScores($scores);
+            $message = count($scores) < $before ? 'Eintrag wurde gelöscht.' : 'Eintrag wurde nicht gefunden.';
+        }
+    }
+
+    renderAdmin($scores, $message);
+}
 
 if ($action === 'questions') {
     $quizQuestions = $questions;
@@ -295,10 +433,7 @@ if ($action === 'questions') {
     $quizQuestions = array_slice($quizQuestions, 0, 15);
 
     jsonResponse([
-        'questions' => array_map(static function (array $question): array {
-            unset($question['correct']);
-            return $question;
-        }, $quizQuestions),
+        'questions' => array_map('publicQuestion', $quizQuestions),
     ]);
 }
 
@@ -328,23 +463,25 @@ if ($action === 'submit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $correct = 0;
     $seen = [];
 
-    foreach ($answers as $questionId => $answerIndex) {
+    foreach ($answers as $questionId => $answerId) {
         $key = (string) $questionId;
-        if (!isset($map[$key]) || isset($seen[$key]) || !is_int($answerIndex)) {
+        if (!isset($map[$key]) || isset($seen[$key]) || !is_string($answerId)) {
             jsonResponse(['error' => 'Antwortdaten sind ungültig.'], 422);
         }
 
         $seen[$key] = true;
-        if ($map[$key]['correct'] === $answerIndex) {
+        $correctAnswerId = answerId((int) $map[$key]['id'], (int) $map[$key]['correct']);
+        if (hash_equals($correctAnswerId, $answerId)) {
             $correct++;
         }
     }
 
     $seconds = max(1, (int) ceil($timeMs / 1000));
-    $score = max(0, ($correct * 10000) - ($seconds * 25));
+    $score = max(0, ($correct * 100) - (int) floor($seconds / 5));
 
     $scores = readScores();
     $entry = [
+        'id' => bin2hex(random_bytes(8)),
         'name' => htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
         'correct' => $correct,
         'total' => 15,
@@ -410,13 +547,13 @@ if ($action === 'submit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="answers">
                     <button
                         v-for="(answer, index) in currentQuestion.answers"
-                        :key="answer"
+                        :key="answer.id"
                         class="answer-button"
-                        :class="{ selected: answers[currentQuestion.id] === index }"
+                        :class="{ selected: answers[currentQuestion.id] === answer.id }"
                         type="button"
                         @click="selectAnswer(index)"
                     >
-                        {{ answer }}
+                        {{ answer.text }}
                     </button>
                 </div>
                 <button class="primary-button" type="button" :disabled="answers[currentQuestion.id] === undefined" @click="nextQuestion">

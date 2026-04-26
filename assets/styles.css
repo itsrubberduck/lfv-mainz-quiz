@@ -348,6 +348,53 @@ h2 {
     }
 }
 
+.admin-shell {
+    width: min(980px, 100%);
+    margin: 0 auto;
+    padding: 22px;
+}
+
+.admin-shell h1 {
+    margin-bottom: 22px;
+}
+
+.admin-message {
+    margin-bottom: 16px;
+    padding: 12px;
+    border: 2px solid var(--primary);
+    color: var(--navy);
+}
+
+.admin-table {
+    width: 100%;
+    margin-top: 22px;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 12px 8px;
+    border-bottom: 2px solid var(--line);
+    text-align: left;
+}
+
+.admin-table th {
+    color: var(--navy);
+    font-family: "Urbanist", Arial, sans-serif;
+    font-weight: 800;
+}
+
+.admin-delete {
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 2px solid var(--danger);
+    border-radius: 0;
+    background: var(--white);
+    color: var(--danger);
+    font-family: "Urbanist", Arial, sans-serif;
+    font-weight: 800;
+}
+
 @media (min-width: 760px) {
     .app-shell {
         padding: 28px;
