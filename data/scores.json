@@ -1,7 +1,16 @@
 [
     {
+        "id": "75a26e696c57c78e",
+        "name": "Paul",
+        "correct": 15,
+        "total": 15,
+        "timeMs": 94999,
+        "score": 1481,
+        "createdAt": "2026-04-26T13:03:56+02:00"
+    },
+    {
         "id": "0cf700271f924be9",
-        "name": "Test Quirin",
+        "name": "M. Weber",
         "correct": 8,
         "total": 15,
         "timeMs": 139576,
@@ -9,8 +18,17 @@
         "createdAt": "2026-04-26T13:04:20+02:00"
     },
     {
+        "id": "a332275f6153a92c",
+        "name": "Leon Jacobs",
+        "correct": 15,
+        "total": 15,
+        "timeMs": 80996,
+        "score": 1484,
+        "createdAt": "2026-04-26T13:12:29+02:00"
+    },
+    {
         "id": "2ffbe7fae4caca5c",
-        "name": "Test Anna",
+        "name": "Julia K.",
         "correct": 8,
         "total": 15,
         "timeMs": 212747,
@@ -19,7 +37,7 @@
     },
     {
         "id": "879bc1d555659d4c",
-        "name": "Test Lena",
+        "name": "ThermikTom",
         "correct": 7,
         "total": 15,
         "timeMs": 115790,
@@ -28,7 +46,7 @@
     },
     {
         "id": "2cd01cda5127e585",
-        "name": "Test Mats",
+        "name": "Nico Schmitt",
         "correct": 5,
         "total": 15,
         "timeMs": 80809,
@@ -37,7 +55,7 @@
     },
     {
         "id": "0d2e98d66736f0f5",
-        "name": "Test Jonas",
+        "name": "Lara",
         "correct": 7,
         "total": 15,
         "timeMs": 146010,
@@ -46,7 +64,7 @@
     },
     {
         "id": "9ea2692887f8a86f",
-        "name": "Test Romy",
+        "name": "F-Schlepp Fan",
         "correct": 6,
         "total": 15,
         "timeMs": 108378,
@@ -55,7 +73,7 @@
     },
     {
         "id": "668336c8d8180fe5",
-        "name": "Test Paula",
+        "name": "Max B.",
         "correct": 8,
         "total": 15,
         "timeMs": 112404,
@@ -64,7 +82,7 @@
     },
     {
         "id": "64c488edeaccb5f9",
-        "name": "Test Nina",
+        "name": "Sophie Keller",
         "correct": 10,
         "total": 15,
         "timeMs": 233939,
@@ -73,7 +91,7 @@
     },
     {
         "id": "d569cd27193ed3ed",
-        "name": "Test Klara",
+        "name": "Jonas",
         "correct": 9,
         "total": 15,
         "timeMs": 116337,
@@ -82,7 +100,7 @@
     },
     {
         "id": "9424e79fca8fad58",
-        "name": "Test Oskar",
+        "name": "Team Gelb",
         "correct": 7,
         "total": 15,
         "timeMs": 245933,
@@ -91,7 +109,7 @@
     },
     {
         "id": "1b025470ffee3291",
-        "name": "Test Ben",
+        "name": "Hanna M.",
         "correct": 7,
         "total": 15,
         "timeMs": 86570,
@@ -100,7 +118,7 @@
     },
     {
         "id": "90a60b0f7c0bf1e5",
-        "name": "Test Hannes",
+        "name": "Pilot42",
         "correct": 9,
         "total": 15,
         "timeMs": 158908,
@@ -109,7 +127,7 @@
     },
     {
         "id": "54b8056ebc89ebad",
-        "name": "Test Tilda",
+        "name": "Ben Hoffmann",
         "correct": 6,
         "total": 15,
         "timeMs": 58416,
@@ -118,7 +136,7 @@
     },
     {
         "id": "d00215b6abfab96e",
-        "name": "Test Emma",
+        "name": "K. Neumann",
         "correct": 8,
         "total": 15,
         "timeMs": 103128,
@@ -127,7 +145,7 @@
     },
     {
         "id": "3cc6c353d7d0a7af",
-        "name": "Test Uwe",
+        "name": "Segelfuchs",
         "correct": 10,
         "total": 15,
         "timeMs": 189096,
@@ -136,7 +154,7 @@
     },
     {
         "id": "15b7afe64940551d",
-        "name": "Test Zoe",
+        "name": "Mia",
         "correct": 10,
         "total": 15,
         "timeMs": 138575,
@@ -145,7 +163,7 @@
     },
     {
         "id": "36160fff187bd737",
-        "name": "Test Clara",
+        "name": "Leon R.",
         "correct": 10,
         "total": 15,
         "timeMs": 100676,
@@ -154,7 +172,7 @@
     },
     {
         "id": "b34a203542bb0062",
-        "name": "Test Greta",
+        "name": "Clara Vogel",
         "correct": 9,
         "total": 15,
         "timeMs": 178510,
@@ -163,7 +181,7 @@
     },
     {
         "id": "07c776b9a5d57b1d",
-        "name": "Test Ida",
+        "name": "Oskar",
         "correct": 5,
         "total": 15,
         "timeMs": 73276,
@@ -172,7 +190,7 @@
     },
     {
         "id": "39c02a4fb7c0d4d1",
-        "name": "Test David",
+        "name": "Windenstart",
         "correct": 9,
         "total": 15,
         "timeMs": 205608,
@@ -181,7 +199,7 @@
     },
     {
         "id": "3e1dd9d1536ceb61",
-        "name": "Test Vera",
+        "name": "Paula S.",
         "correct": 8,
         "total": 15,
         "timeMs": 81156,
@@ -190,7 +208,7 @@
     },
     {
         "id": "23775616c06b264f",
-        "name": "Test Yara",
+        "name": "Lukas Brandt",
         "correct": 7,
         "total": 15,
         "timeMs": 223316,
@@ -199,7 +217,7 @@
     },
     {
         "id": "5092cde6cd7040a3",
-        "name": "Test Felix",
+        "name": "Nina",
         "correct": 6,
         "total": 15,
         "timeMs": 218418,
@@ -208,7 +226,7 @@
     },
     {
         "id": "b81b46ccccae8ee7",
-        "name": "Test Willi",
+        "name": "Quax",
         "correct": 7,
         "total": 15,
         "timeMs": 181882,
@@ -217,7 +235,7 @@
     },
     {
         "id": "ce1f7db848240bad",
-        "name": "Test Simon",
+        "name": "Greta Lang",
         "correct": 6,
         "total": 15,
         "timeMs": 164096,
